@@ -1,7 +1,9 @@
 # Run the model 
 
+# first run the docker 
+docker run --gpus all -it --rm -v$PWD:/home/eli/startchat starchat:1.8.6 bash
 
-cd starcoder/chat 
+cd /home/eli/chat 
 
 # Generate samples
 
