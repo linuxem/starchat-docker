@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Generative Model Outputs</title>
+  </head>
+  <body>
+    <h1>Generative Model Outputs</h1>
+    <form method="POST" action="/">
+      <label for="model_id">Model ID:</label>
+      <input type="text" id="model_id" name="model_id" required><br><br>
+      <label for="revision">Revision:</label>
+      <input type="text" id="revision" name="revision"><br><br>
+      <label for="system_prompt">System Prompt:</label>
+      <input type="text" id="system_prompt" name="system_prompt"><br><br>
+      <input type="submit" value="Generate">
+    </form>
+    <br>
+    <h2>Generated Outputs:</h2>
+    <pre>{{ outputs }}</pre>
+  </body>
+</html>

@@ -1,9 +1,10 @@
 accelerate
 transformers
-torch
-xformers
 bitsandbytes
 scipy
-tqdm==4.65.0
-datasets==2.11.0
-huggingface-hub==0.13.4
+huggingface-hub
+dialogues
+flask
+einops
+genienlp 
+sacrebleu
