@@ -20,6 +20,7 @@ from transformers import (AutoModelForCausalLM, AutoTokenizer,
                           GenerationConfig, set_seed)
 
 from flask import Flask, render_template, request
+port = 3303
 
 app = Flask(__name__)
 
@@ -78,4 +79,4 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=port)
