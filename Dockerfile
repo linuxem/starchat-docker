@@ -1,6 +1,7 @@
 FROM linuxem/starchat:1.8.6
 #FROM nvcr.io/nvidia/pytorch:22.04-py3 
 
+
 # home directory 
 #RUN mkdir /home/eli/
 
@@ -14,6 +15,10 @@ WORKDIR "/home/eli/startchat/"
 COPY start-chat.py .
 
 COPY starcoder /home/eli/startchat
+
+EXPOSE 5000
+EXPOSE 6006
+EXPOSE 8888
 
 # run python program
 #CMD ["python3", "./starcoder/chat/generate.py", "--model_id", "./models"]
