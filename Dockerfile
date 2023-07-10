@@ -16,4 +16,5 @@ COPY start-chat.py .
 COPY starcoder /home/eli/startchat
 
 # run python program
-CMD ["python3", "./starcoder/chat/generate.py", "--model_id", "./models"]
+#CMD ["python3", "./starcoder/chat/generate.py", "--model_id", "./models"]
+CMD ["python3", "./star-code-chat.py", "--model_id", "./models"]
