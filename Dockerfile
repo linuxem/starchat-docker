@@ -16,7 +16,7 @@ COPY start-chat.py .
 
 COPY starcoder /home/eli/startchat
 
-EXPOSE 5000
+EXPOSE 3303
 EXPOSE 6006
 EXPOSE 8888
 
