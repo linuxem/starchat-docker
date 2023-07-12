@@ -11,8 +11,11 @@ FROM linuxem/starchat:1.8.6
     # Note: we had to merge the two "pip install" package lists here, otherwise
     # the last "pip install" command in the OP may break dependency resolution...
 WORKDIR "/home/eli/startchat/"
+RUN mkdir data
 
-COPY start-chat.py .
+COPY templates .
+COPY star-code-chat.py .
+COPY dialogues.py .
 
 COPY starcoder /home/eli/startchat
 
