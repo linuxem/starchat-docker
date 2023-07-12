@@ -24,45 +24,6 @@ port = 3303
 
 app = Flask(__name__)
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--model_id",
-    type=str,
-    help="Name of model to generate samples with",
-)
-parser.add_argument(
-    "--revision",
-    type=str,
-    default=None,
-    help="The model repo's revision to use",
-)
-args = parser.parse_args()
-
-set_seed(42)
-
-try:
-    dialogue_template = DialogueTemplate.from_pretrained(args.model_id, revision=args.revision)
-except Exception:
-    print("No dialogue template found in model repo. Defaulting to the `no_system` template.")
-    dialogue_template = get_dialogue_template("no_system")
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-tokenizer = AutoTokenizer.from_pretrained(args.model_id, revision=args.revision)
-generation_config = GenerationConfig(
-    temperature=0.2,
-    top_k=50,
-    top_p=0.95,
-    repetition_penalty=1.2,
-    do_sample=True,
-    pad_token_id=tokenizer.eos_token_id,
-    eos_token_id=tokenizer.convert_tokens_to_ids(dialogue_template.end_token),
-    min_new_tokens=32,
-    max_new_tokens=256,
-)
-model = AutoModelForCausalLM.from_pretrained(
-    args.model_id, revision=args.revision, load_in_8bit=True, device_map="auto", torch_dtype=torch.float16
-)
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -71,8 +32,32 @@ def home():
         return render_template('index.html', prompt=user_input, output=generated_text)
     return render_template('index.html')
 
-
 def generate_text(prompt):
+    set_seed(42)
+
+    try:
+        dialogue_template = DialogueTemplate.from_pretrained(args.model_id, revision=args.revision)
+    except Exception:
+        print("No dialogue template found in model repo. Defaulting to the `no_system` template.")
+        dialogue_template = get_dialogue_template("no_system")
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    tokenizer = AutoTokenizer.from_pretrained(args.model_id, revision=args.revision)
+    generation_config = GenerationConfig(
+        temperature=0.2,
+        top_k=50,
+        top_p=0.95,
+        repetition_penalty=1.2,
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id,
+        eos_token_id=tokenizer.convert_tokens_to_ids(dialogue_template.end_token),
+        min_new_tokens=32,
+        max_new_tokens=256,
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model_id, revision=args.revision, load_in_8bit=True, device_map="auto", torch_dtype=torch.float16
+    )
+
     batch = tokenizer(prompt, return_tensors="pt", return_token_type_ids=False).to(device)
     generated_ids = model.generate(**batch, generation_config=generation_config)
     generated_text = tokenizer.decode(generated_ids[0], skip_special_tokens=False).lstrip()
@@ -80,4 +65,18 @@ def generate_text(prompt):
     return generated_text
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model_id",
+        type=str,
+        help="Name of model to generate samples with",
+    )
+    parser.add_argument(
+        "--revision",
+        type=str,
+        default=None,
+        help="The model repo's revision to use",
+    )
+    args = parser.parse_args()
+
     app.run(debug=True, host='0.0.0.0', port=port)
