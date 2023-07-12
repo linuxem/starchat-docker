@@ -7,11 +7,32 @@
             color: #ddd;
         }
     </style>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevents form from submitting normally
+
+            // Get the submit button and disable it
+            var submitButton = document.querySelector('input[type="submit"]');
+            submitButton.disabled = true;
+
+            // Get the value from the textarea
+            var prompt = document.querySelector('textarea[name="prompt"]').value;
+
+            // Simulate waiting for an answer with a timeout
+            setTimeout(function() {
+                // Use the value to modify the innerHTML of the pre element
+                document.getElementById('output').innerHTML = 'You entered: ' + prompt;
+
+                // Enable the submit button again
+                submitButton.disabled = false;
+            }, 2000); // Wait for 2 seconds
+        }
+    </script>
 </head>
 <body>
     <h1>GPTBIT</h1>
     <h2>Welcome to Elbit Generative Model Interface at DevBit</h2>
-    <form method="POST" style="color: #ddd;">
+    <form method="POST" onsubmit="handleSubmit(event)" style="color: #ddd;">
         <textarea name="prompt" rows="5" cols="50" placeholder="Enter prompt..." style="background-color: #333; color: #ddd;"></textarea><br>
         <input type="submit" value="Ask" style="background-color: #04860f; color: #ddd;">
     </form>
